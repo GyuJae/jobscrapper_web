@@ -10,7 +10,7 @@ const Container = styled.div`
   margin-bottom: 10px;
   padding: 17px 10px;
   border-radius: 5px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   position: relative;
 `;
 
