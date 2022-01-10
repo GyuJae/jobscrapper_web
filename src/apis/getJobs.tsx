@@ -9,9 +9,15 @@ export interface JobType {
   site: string;
 }
 
+interface JobObj {
+  [key: string]: JobType[];
+}
+
 export interface JobResult {
-  jobs: JobType[];
+  jobs: JobObj;
   success: boolean;
+  totalJobs: number;
+  error: string | null;
 }
 export const getJobs = (keyword: string) =>
   fetch(BASE_URL + keyword)

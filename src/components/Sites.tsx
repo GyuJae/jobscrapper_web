@@ -30,7 +30,7 @@ const Underline = styled(motion.div)`
   background: ${(props) => props.theme.color.accent};
 `;
 
-const Sites = () => {
+const Sites: React.FC<{ allJobsCount?: number }> = ({ allJobsCount }) => {
   const [siteValue, setSiteValue] = useRecoilState(siteState);
   const { isLoading, isError, error, data } = useQuery<{
     success: boolean;
@@ -45,17 +45,11 @@ const Sites = () => {
   }
   return (
     <Container>
-      <Site onClick={() => setSiteValue("All")}>
-        All
-        {siteValue === "All" ? <Underline layoutId="underline" /> : null}
-      </Site>
       {data?.sites.map((site, index) => (
-        <>
-          <Site onClick={() => setSiteValue(site)} key={index}>
-            {site}
-            {siteValue === site ? <Underline layoutId="underline" /> : null}
-          </Site>
-        </>
+        <Site onClick={() => setSiteValue(site)} key={index}>
+          {site}
+          {siteValue === site ? <Underline layoutId="underline" /> : null}
+        </Site>
       ))}
     </Container>
   );

@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { getJobs, JobResult } from "../apis/getJobs";
 import Job from "../components/Job";
+import Loading from "../components/Loading";
 import Sites from "../components/Sites";
 import { siteState } from "../providers/site.provider";
 
@@ -36,6 +37,23 @@ const JobsContainer = styled.div`
   flex-direction: column;
 `;
 
+const LoadingContainer = styled.div`
+  padding: 30px 0px;
+`;
+
+const More = styled.div`
+  padding: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-end;
+  width: ${(props) => props.theme.jobWidth};
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const Result = () => {
   const selectedSite = useRecoilValue(siteState);
   const client = useQueryClient();
@@ -43,15 +61,35 @@ const Result = () => {
   const { isLoading, isError, error, data } = useQuery<JobResult>("jobs", () =>
     getJobs(keyword as string)
   );
+  const navigate = useNavigate();
+
+  const onClickMore = () => {
+    navigate(`/${keyword}/${selectedSite}`);
+  };
 
   useEffect(() => {
     client.refetchQueries(["jobs", "sites"]);
   }, [client, keyword]);
 
   if (isLoading) {
-    return <Container>loading....</Container>;
+    return (
+      <Container>
+        <LoadingContainer>
+          <Loading loading={isLoading} size={20} />
+        </LoadingContainer>
+      </Container>
+    );
   }
   if (isError) {
+    if (error === "Missing queryFn") {
+      return (
+        <Container>
+          <LoadingContainer>
+            <Loading loading={isLoading} size={20} />
+          </LoadingContainer>
+        </Container>
+      );
+    }
     return (
       <Container>
         <Error>Error {error}</Error>
@@ -61,11 +99,11 @@ const Result = () => {
 
   return (
     <Container>
-      <Header count={keyword?.length as number}>
-        {keyword?.toUpperCase()}
+      <Header count={(keyword?.length as number) + 1}>
+        {keyword?.toUpperCase()} ({data?.totalJobs})
       </Header>
       <JobsContainer>
-        <Sites />
+        <Sites allJobsCount={data?.totalJobs} />
         <AnimatePresence exitBeforeEnter>
           <motion.div
             animate={{ opacity: 1, y: 0 }}
@@ -73,14 +111,20 @@ const Result = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 1 }}
           >
-            {selectedSite === "All"
-              ? data?.jobs
-                  .slice(0, 20)
-                  .map((job) => <Job key={job.id} {...job} />)
-              : data?.jobs
-                  .filter((job) => job.site === selectedSite)
-                  .slice(0, 20)
-                  .map((job) => <Job key={job.id} {...job} />)}
+            {data?.jobs[selectedSite].slice(0, 20).map((job) => (
+              <Job key={job.id} {...job} />
+            ))}
+          </motion.div>
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 1 }}
+          >
+            {data?.jobs[selectedSite] &&
+              data?.jobs[selectedSite].length >= 20 && (
+                <More onClick={onClickMore}> 더 보기</More>
+              )}
           </motion.div>
         </AnimatePresence>
       </JobsContainer>

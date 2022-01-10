@@ -15,6 +15,7 @@ const Container = styled.div`
 `;
 
 const Link = styled.a`
+  padding: 3px 0px;
   text-decoration: none;
 `;
 

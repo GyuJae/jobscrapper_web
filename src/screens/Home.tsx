@@ -1,5 +1,6 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -23,14 +24,15 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-  border: 2px solid white;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid white;
   width: 400px;
   height: 40px;
   font-size: 20px;
   background-color: ${(props) => props.theme.color.main};
   color: ${(props) => props.theme.color.sub};
   &:focus {
-    outline: 1px solid;
   }
 `;
 
@@ -56,8 +58,10 @@ const Home = () => {
     formState: { errors },
   } = useForm<Inputs>();
   const navigate = useNavigate();
+  const client = useQueryClient();
   const onSubmit: SubmitHandler<Inputs> = ({ keyword }) => {
     navigate(keyword);
+    client.fetchQuery("jobs");
   };
 
   return (
