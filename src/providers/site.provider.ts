@@ -7,5 +7,5 @@ interface ISiteState {
 
 export const siteState = atom<ISiteState>({
   key: "siteState",
-  default: { site: "indeed", page: 0 },
+  default: { site: "사람인", page: 0 },
 });

@@ -24,6 +24,9 @@ const Header = styled.div<{ count: number }>`
   padding: 10px 0px;
   margin-bottom: 10px;
   width: ${(props) => `${props.count * 20}px`};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Error = styled.span`
@@ -59,10 +62,10 @@ const Site = styled.div`
 
 const Underline = styled(motion.div)`
   position: absolute;
-  bottom: -3px;
+  bottom: -10px;
   left: 0;
   right: 0;
-  height: 1px;
+  height: 1.5px;
   background: ${(props) => props.theme.color.accent};
 `;
 
@@ -75,11 +78,25 @@ const JobCount = styled(motion.div)`
 const Pagination = styled(motion.div)`
   font-size: 20px;
   font-weight: 700;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: ${(props) => props.theme.jobWidth};
 `;
 
-const PaginationArrow = styled(motion.div)``;
+const PaginationArrow = styled(motion.div)`
+  padding: 20px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`;
 
-const Page = styled(motion.div)``;
+const Page = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0px;
+`;
 
 const Result = () => {
   const { keyword } = useParams<{ keyword: string }>();
@@ -128,7 +145,7 @@ const Result = () => {
 
   return (
     <Container>
-      <Header count={(keyword?.length as number) + 1}>
+      <Header count={(keyword?.length as number) + 2}>
         {keyword?.toUpperCase()} ({data?.totalJobs})
       </Header>
       <JobsContainer>
@@ -157,19 +174,53 @@ const Result = () => {
               Object.keys(data?.jobs).map((siteValue) =>
                 siteValue === siteRecoilValue.site
                   ? data.jobs[siteValue]
-                      .slice(0, 20)
+                      .slice(
+                        siteRecoilValue.page * 20,
+                        siteRecoilValue.page * 20 + 20
+                      )
                       .map((job) => <Job job={job} key={job.id} />)
                   : null
               )}
             <Pagination>
-              {siteRecoilValue.page > 0 && (
-                <PaginationArrow>Prev</PaginationArrow>
+              {siteRecoilValue.page > 0 ? (
+                <PaginationArrow
+                  onClick={() => {
+                    setSiteValue({
+                      site: siteRecoilValue.site,
+                      page: siteRecoilValue.page - 1,
+                    });
+                    window.scrollTo({
+                      top: 0,
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  Prev
+                </PaginationArrow>
+              ) : (
+                <div></div>
               )}
-              <Page>{siteRecoilValue.page}</Page>
+              <Page>{siteRecoilValue.page + 1}</Page>
               {data?.jobs &&
-                siteRecoilValue.page <
-                  Math.ceil(data?.jobs[siteRecoilValue.site].length / 20) +
-                    1 && <PaginationArrow>Next</PaginationArrow>}
+              siteRecoilValue.page <
+                Math.floor(data?.jobs[siteRecoilValue.site].length / 20) ? (
+                <PaginationArrow
+                  onClick={() => {
+                    setSiteValue({
+                      site: siteRecoilValue.site,
+                      page: siteRecoilValue.page + 1,
+                    });
+                    window.scrollTo({
+                      top: 0,
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  Next
+                </PaginationArrow>
+              ) : (
+                <div></div>
+              )}
             </Pagination>
           </motion.div>
         </AnimatePresence>
