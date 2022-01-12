@@ -1,6 +1,11 @@
 import { atom } from "recoil";
 
-export const siteState = atom<string>({
+interface ISiteState {
+  site: string;
+  page: number;
+}
+
+export const siteState = atom<ISiteState>({
   key: "siteState",
-  default: "사람인",
+  default: { site: "indeed", page: 0 },
 });

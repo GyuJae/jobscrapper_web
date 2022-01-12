@@ -1,8 +1,9 @@
+import { motion } from "framer-motion";
 import React from "react";
 import styled from "styled-components";
 import { JobType } from "../apis/getJobs";
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   width: ${(props) => props.theme.jobWidth};
   background-color: ${(props) => props.theme.color.sub};
   display: flex;
@@ -14,12 +15,12 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Link = styled.a`
+const Link = styled(motion.a)`
   padding: 3px 0px;
   text-decoration: none;
 `;
 
-const Title = styled.h2`
+const Title = styled(motion.h2)`
   font-size: 17px;
   font-weight: 600;
   color: ${(props) => props.theme.color.main};
@@ -28,21 +29,21 @@ const Title = styled.h2`
   }
 `;
 
-const Company = styled.h3`
+const Company = styled(motion.h3)`
   font-weight: 700;
   font-size: 14px;
   color: ${(props) => props.theme.color.main};
   margin-top: 5px;
 `;
 
-const Condition = styled.h4`
+const Condition = styled(motion.h4)`
   font-size: 14px;
   font-weight: 500;
   color: #999999;
   margin-top: 5px;
 `;
 
-const Site = styled.h5`
+const Site = styled(motion.h5)`
   position: absolute;
   top: 5px;
   right: 5px;
@@ -51,9 +52,20 @@ const Site = styled.h5`
   color: ${(props) => props.theme.color.main};
 `;
 
-const Job: React.FC<JobType> = ({ title, company, condition, url, site }) => {
+interface IJob {
+  job: JobType;
+}
+
+const Job: React.FC<IJob> = ({
+  job: { title, company, condition, url, site },
+}) => {
   return (
-    <Container>
+    <Container
+      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.25 }}
+    >
       <Link href={url} target="_blank">
         <Title>{title}</Title>
       </Link>

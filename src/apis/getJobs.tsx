@@ -22,4 +22,6 @@ export interface JobResult {
 export const getJobs = (keyword: string) =>
   fetch(BASE_URL + keyword)
     .then((res) => res.json())
-    .catch((e) => alert(e));
+    .catch((e) => {
+      throw new Error(e);
+    });
