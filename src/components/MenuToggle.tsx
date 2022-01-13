@@ -6,7 +6,7 @@ const Path = (props: any) => (
   <motion.path
     fill="transparent"
     strokeWidth="3"
-    stroke="hsl(0, 0%, 18%)"
+    stroke="hsl(0, 0%, 89.41176470588236%)"
     strokeLinecap="round"
     {...props}
   />
@@ -16,18 +16,23 @@ const Btn = styled.button`
   outline: none;
   border: none;
   cursor: pointer;
-  position: absolute;
-  top: 18px;
-  left: 300px;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: #fff;
+  background: ${(props) => props.theme.color.main};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+`;
+
+const Svg = styled.svg`
+  fill: #fff;
 `;
 
 export const MenuToggle = ({ toggle }: { toggle: () => void }) => (
   <Btn onClick={toggle}>
-    <svg width="23" height="23" viewBox="0 0 23 23">
+    <Svg width="23" height="23" viewBox="0 0 21 21">
       <Path
         variants={{
           closed: { d: "M 2 2.5 L 20 2.5" },
@@ -48,6 +53,6 @@ export const MenuToggle = ({ toggle }: { toggle: () => void }) => (
           open: { d: "M 3 2.5 L 17 16.346" },
         }}
       />
-    </svg>
+    </Svg>
   </Btn>
 );

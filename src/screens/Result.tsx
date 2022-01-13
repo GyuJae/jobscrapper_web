@@ -145,7 +145,7 @@ const Result = () => {
 
   return (
     <Container>
-      <Header count={(keyword?.length as number) + 2}>
+      <Header count={(keyword?.length as number) + 4}>
         {keyword?.toUpperCase()} ({data?.totalJobs})
       </Header>
       <JobsContainer>

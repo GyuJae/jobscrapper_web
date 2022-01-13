@@ -13,6 +13,9 @@ const Container = styled(motion.main)`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  border: 1.5px solid ${(props) => props.theme.color.sub};
+  padding: 20px;
+  border-radius: 10px;
 `;
 
 const Form = styled(motion.form)`
@@ -42,6 +45,7 @@ const Submit = styled(motion.button)`
   margin-top: 15px;
   cursor: pointer;
   margin-bottom: 20px;
+  font-size: 20px;
 `;
 
 const Error = styled(motion.span)`
@@ -50,28 +54,32 @@ const Error = styled(motion.span)`
   color: ${(props) => props.theme.color.accent};
 `;
 
-const variants = {
-  open: {
-    y: 0,
-    opacity: 1,
+const sidebar = {
+  open: (height = 1000) => ({
+    clipPath: `circle(${height * 2 + 200}px at 40px 40px)`,
     transition: {
-      y: { stiffness: 1000, velocity: -100 },
+      type: "spring",
+      stiffness: 20,
+      restDelta: 2,
     },
-  },
+  }),
   closed: {
-    y: 50,
-    opacity: 0,
+    clipPath: "circle(30px at 40px 40px)",
     transition: {
-      y: { stiffness: 1000 },
+      delay: 0.5,
+      type: "spring",
+      stiffness: 400,
+      damping: 40,
     },
   },
 };
 
 interface ISearchForm {
   isOpen: boolean;
+  toggleOpen: any;
 }
 
-const SerachForm: React.FC<ISearchForm> = ({ isOpen }) => {
+const SerachForm: React.FC<ISearchForm> = ({ isOpen, toggleOpen }) => {
   const {
     register,
     handleSubmit,
@@ -80,11 +88,12 @@ const SerachForm: React.FC<ISearchForm> = ({ isOpen }) => {
   const navigate = useNavigate();
   const client = useQueryClient();
   const onSubmit: SubmitHandler<Inputs> = ({ keyword }) => {
+    toggleOpen(false);
+    client.refetchQueries(["jobs", "sites"]);
     navigate(keyword);
-    client.fetchQuery("jobs");
   };
   return (
-    <Container variants={variants} animate={isOpen ? "open" : "close"}>
+    <Container variants={sidebar} animate={isOpen ? "open" : "close"}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Input
           {...register("keyword", { required: true })}
