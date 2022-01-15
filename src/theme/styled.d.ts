@@ -9,6 +9,7 @@ declare module "styled-components" {
       main: string;
       sub: string;
       accent: string;
+      darkAccent: string;
     };
   }
 }

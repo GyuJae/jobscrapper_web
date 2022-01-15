@@ -9,24 +9,45 @@ import Job from "../components/Job";
 import Loading from "../components/Loading";
 import { siteState } from "../providers/site.provider";
 import { getSites } from "../apis/getSites";
+import { CSVLink } from "react-csv";
 
 const Container = styled.main`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-content: flex-start;
 `;
 
-const Header = styled.div<{ count: number }>`
-  font-size: 18px;
-  font-weight: 600;
-  border-bottom: 1px solid ${(props) => props.theme.color.accent};
-  padding: 10px 0px;
-  margin-bottom: 10px;
-  width: ${(props) => `${props.count * 20}px`};
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Header = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid ${(props) => props.theme.color.accent};
+  padding: 10px;
+  margin-bottom: 10px;
+`;
+
+const CSVContainer = styled.div`
+  display: flex;
+`;
+
+const ExportCSV = styled(CSVLink)`
+  background-color: ${(props) => props.theme.color.darkAccent};
+  padding: 10px;
+  color: ${(props) => props.theme.color.sub};
+  font-weight: 700;
+  font-size: 10px;
+  border-radius: 7px;
+  margin-right: 5px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 `;
 
 const Error = styled.span`
@@ -38,6 +59,8 @@ const Error = styled.span`
 const JobsContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const LoadingContainer = styled.div`
@@ -45,10 +68,10 @@ const LoadingContainer = styled.div`
 `;
 
 const SiteContainer = styled.div`
-  max-width: ${(props) => props.theme.jobWidth};
+  min-width: ${(props) => props.theme.jobWidth};
   padding: 20px;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
 `;
 
 const Site = styled.div`
@@ -145,9 +168,27 @@ const Result = () => {
 
   return (
     <Container>
-      <Header count={(keyword?.length as number) + 4}>
-        {keyword?.toUpperCase()} ({data?.totalJobs})
-      </Header>
+      <HeaderContainer>
+        <Header>
+          {keyword?.toUpperCase()} ({data?.totalJobs})
+        </Header>
+        {data?.jobs && (
+          <CSVContainer>
+            <ExportCSV
+              data={Object.values(data.jobs).flat()}
+              filename={`All - ${keyword}`}
+            >
+              All Export to CSV
+            </ExportCSV>
+            <ExportCSV
+              data={data.jobs[siteRecoilValue.site]}
+              filename={`${siteRecoilValue.site} - ${keyword}`}
+            >
+              {siteRecoilValue.site} Export to CSV
+            </ExportCSV>
+          </CSVContainer>
+        )}
+      </HeaderContainer>
       <JobsContainer>
         <SiteContainer>
           {siteData?.sites.map((site, index) => (

@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 type Inputs = {
@@ -14,15 +13,15 @@ const Container = styled(motion.main)`
   align-items: center;
   flex-direction: column;
   border: 1.5px solid ${(props) => props.theme.color.sub};
-  padding: 20px;
-  border-radius: 10px;
+  padding: 15px;
+  border-radius: 5px;
 `;
 
 const Form = styled(motion.form)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
 `;
 
 const Input = styled(motion.input)`
@@ -40,12 +39,13 @@ const Input = styled(motion.input)`
 
 const Submit = styled(motion.button)`
   all: unset;
-  border: 1.5px solid;
-  padding: 5px 10px;
+  padding: 7px 10px;
   margin-top: 15px;
   cursor: pointer;
-  margin-bottom: 20px;
-  font-size: 20px;
+  font-size: 16px;
+  background-color: ${(props) => props.theme.color.sub};
+  border-radius: 5px;
+  color: ${(props) => props.theme.color.main};
 `;
 
 const Error = styled(motion.span)`
@@ -86,11 +86,10 @@ const SerachForm: React.FC<ISearchForm> = ({ isOpen, toggleOpen }) => {
     formState: { errors },
   } = useForm<Inputs>();
   const navigate = useNavigate();
-  const client = useQueryClient();
   const onSubmit: SubmitHandler<Inputs> = ({ keyword }) => {
     toggleOpen(false);
-    client.refetchQueries(["jobs", "sites"]);
-    navigate(keyword);
+    navigate(keyword, { replace: true });
+    window.location.reload();
   };
   return (
     <Container variants={sidebar} animate={isOpen ? "open" : "close"}>
