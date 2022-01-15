@@ -4,10 +4,12 @@ import styled from "styled-components";
 import { JobType } from "../apis/getJobs";
 
 const Container = styled(motion.div)`
-  width: ${(props) => props.theme.jobWidth};
+  min-width: ${(props) => props.theme.jobWidth};
+
   background-color: ${(props) => props.theme.color.sub};
   display: flex;
   flex-direction: column;
+  justify-content: center;
   margin-bottom: 10px;
   padding: 17px 10px;
   border-radius: 5px;

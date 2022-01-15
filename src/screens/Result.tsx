@@ -58,6 +58,7 @@ const Error = styled.span`
 
 const JobsContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -103,7 +104,7 @@ const Pagination = styled(motion.div)`
   font-weight: 700;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  width: ${(props) => props.theme.jobWidth};
+  max-width: ${(props) => props.theme.jobWidth};
 `;
 
 const PaginationArrow = styled(motion.div)`

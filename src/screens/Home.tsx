@@ -15,11 +15,12 @@ const Container = styled(motion.main)`
 `;
 
 const SiteListContainer = styled(motion.div)`
-  width: ${(props) => props.theme.jobWidth};
+  max-width: ${(props) => props.theme.jobWidth};
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 150px;
+  flex-wrap: wrap;
 `;
 
 const variants = {
